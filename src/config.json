@@ -1,0 +1,44 @@
+{
+    "constants": {
+        "level_rate": 1.25,
+        "default_exp": 100,
+        "value_bias": 5.3
+    },
+    "colors": {
+        "default": "#324ca8",
+        "error": "#de574e",
+        "success": "#38ab55",
+        "white": "#d7dbd8",
+        "transparent": "#2b2d31",
+        "tiers": {
+            "common": "#adadad",
+            "uncommon": "#56adb0",
+            "rare": "#b31e2b",
+            "epic": "#51c953",
+            "legendary": "#cfcf06",
+            "customDefault": "#2b2d31"
+        }
+    },
+    "values": {
+        "common": {
+            "min": 10,
+            "max": 25
+        },
+        "uncommon": {
+            "min": 26,
+            "max": 100
+        },
+        "rare": {
+            "min": 101,
+            "max": 500
+        },
+        "epic": {
+            "min": 501,
+            "max": 5000
+        },
+        "legendary": {
+            "min": 5001,
+            "max": 50000
+        }
+    }
+}

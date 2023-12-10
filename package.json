@@ -1,0 +1,37 @@
+{
+  "name": "trinkets",
+  "version": "1.0.0",
+  "description": "A global Discord collecting game.",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "start:dev": "ts-node-dev src/index.ts",
+    "start:prod": "node dist/index.js",
+    "dev": "nodemon ./src/index.ts",
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "typescript",
+    "discord.js",
+    "vercel",
+    "trinkets"
+  ],
+  "author": "MJ Anglin <contact@mjanglin.com> (https://mjanglin.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/uuid": "^9.0.7",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "mongoose": "^8.0.1",
+    "nodemon": "^3.0.1",
+    "uuid": "^9.0.1"
+  }
+}
