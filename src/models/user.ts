@@ -10,7 +10,7 @@ export const userSchema = new Schema({
     id: String,
     level: Number,
     avatar: String,
-    inventory: {type: Array<String>},
+    inventory: { type: Array<String> },
     experience: Number,
     guildId: String,
 });
@@ -37,28 +37,29 @@ export class UserClass {
     }
 
     async find(trinket: ItemClass): Promise<EmbedBuilder[]> {
-        let array: Array<EmbedBuilder>;
-        let embed: EmbedBuilder;
+        let embed = new EmbedBuilder();
+        let array: EmbedBuilder[] = [];
 
         if (!await this.hasFoundBefore(trinket.uuid)) {
+            embed = trinket.embed();
+            array.push(embed);
+        } else {
+
             this.inventory.push(trinket.uuid);
-            
+
             embed
                 .setColor(colors.transparent as ColorResolvable)
                 .setThumbnail(trinket.image)
                 .setDescription(`You've already found **${trinket.name}**! \n\n+**${trinket.value.toString()}** EXP`);
-            
-            array.push(embed);
-        } else {
-            embed = trinket.embed();
+
             array.push(embed);
         }
 
         this.experience += trinket.value;
 
-        do {
+        if (this.experience >= ((this.defaultExp * this.level) * this.levelRate)) {
             array.push(this.levelUp());
-        } while (this.experience >= this.defaultExp * this.level * this.levelRate);
+        }
 
         await this.data();
 
@@ -67,7 +68,7 @@ export class UserClass {
 
     levelUp() {
         this.level = this.level + 1;
-        let embed: EmbedBuilder;
+        let embed = new EmbedBuilder();
 
         embed
             .setColor(colors.success as ColorResolvable)
@@ -91,7 +92,7 @@ export class UserClass {
         userData.experience = this.experience;
         userData.inventory = this.inventory;
         userData.level = this.level;
-        
+
         await userData.save();
 
         return userData;
@@ -111,8 +112,8 @@ export class UserClass {
             .setTitle(userData.name)
             .setThumbnail(userData.avatar)
             .setColor(colors.transparent as ColorResolvable)
-            .setDescription(`• trinket count: \`${trinketLength.toString}\`\n\n• level: \`${level.toString()}\`\n• experience: \`${experience.toString()}\`\n\n${expBar}`);
-        
+            .setDescription(`• trinket count: \`${String(trinketLength)}\`\n\n• level: \`${level.toString()}\`\n• experience: \`${experience.toString()}\`\n\n${expBar}`);
+
         return embed;
     }
 }

@@ -1,4 +1,5 @@
 import User, { UserClass } from "../models/user";
+import { emojis } from '../config.json';
 
 export const experienceBar = async (user: UserClass) => {
     let userData = await User.findOne({
@@ -20,7 +21,7 @@ export const experienceBar = async (user: UserClass) => {
 
     const filledLength = Math.floor((percentage / maxExp) * barLength);
 
-    const bar =  "**[** " + `<:trinkets:1182021229633359993>`.repeat(filledLength) + `<:trinketGrey:1182021640155058307>`.repeat(barLength - filledLength) + " **]**";
+    const bar =  "**[** " + emojis.icon.repeat(filledLength) + emojis.icon_grey.repeat(barLength - filledLength) + " **]**";
 
     return bar;
 }

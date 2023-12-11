@@ -1,9 +1,10 @@
 import { ColorResolvable, EmbedBuilder } from "discord.js";
 import mongoose, { Schema } from "mongoose";
-import { colors, constants, values } from '../config.json';
+import { colors, constants, values, emojis } from '../config.json';
 import { Tier } from "../util/types";
 import { UserClass } from "./user";
-import { UuidClass } from "./uuid";
+import { v4 as uuidv4 } from 'uuid';
+import "colors";
 
 
 export type ItemType = {
@@ -12,14 +13,16 @@ export type ItemType = {
     uuid: string;
     value: number;
     guildId?: string;
+    tier: string;
 }
 
 export const itemSchema: Schema<ItemType> = new Schema({
     name: String,
-    image: String,
-    uuid: String,
+    image: {type: String, unique: true},
+    uuid: {type: String, unique: true},
     value: Number,
     guildId: String,
+    tier: String,
 });
 
 export class ItemClass {
@@ -29,6 +32,7 @@ export class ItemClass {
     value: number;
     guildId: string;
     user?: UserClass;
+    tier: Tier;
 
     constructor(user: UserClass) {
         this.user = user;
@@ -39,9 +43,25 @@ export class ItemClass {
         this.image = image;
         this.guildId = guildId;
 
-        this.value = this.assignValue();
+        let embed = new EmbedBuilder();
 
-        await this.data();
+        if (await this.exists()) {
+            embed
+                .setColor(colors.error as ColorResolvable)
+                .setDescription(`**${name}** has already been added by this guild!`);
+        } else {
+            this.uuid = this.assignUuid();
+            this.value = this.assignValue();
+            this.tier = this.assignTier();
+            await this.data();
+
+            embed
+                .setColor(colors.success as ColorResolvable)
+                .setDescription(`**${name}** added!`)
+                .setThumbnail(image);
+        }
+
+        return embed;
     }
 
     assignValue() {
@@ -73,9 +93,24 @@ export class ItemClass {
             tier = 'epic';
         } else {
             tier = 'legendary';
-        } 
+        }
+
+        this.tier = tier;
 
         return tier;
+    }
+
+    emoji(): string {
+        let emoji: string;
+        let tier = this.assignTier();
+
+        if (tier === 'common') emoji = emojis.tiers.common;
+        if (tier === 'uncommon') emoji = emojis.tiers.uncommon;
+        if (tier === 'rare') emoji = emojis.tiers.common;
+        if (tier === 'epic') emoji = emojis.tiers.epic;
+        if (tier === 'legendary') emoji = emojis.tiers.legendary;
+
+        return emoji;
     }
 
     assignColor(): string {
@@ -84,7 +119,7 @@ export class ItemClass {
         let color = colors.tiers.common;
 
         if (tier === 'common') color = colors.tiers.common;
-        if (tier === 'uncommon') color  = colors.tiers.uncommon;
+        if (tier === 'uncommon') color = colors.tiers.uncommon;
         if (tier === 'rare') color = colors.tiers.rare;
         if (tier === 'epic') color = colors.tiers.epic;
         if (tier === 'legendary') color = colors.tiers.legendary;
@@ -92,34 +127,49 @@ export class ItemClass {
         return color;
     }
 
-    async assignUuid() {
-        const uuid = await new UuidClass().generate();
+    assignUuid() {
+        const uuid = uuidv4();
         this.uuid = uuid;
+
         return uuid;
     }
 
     async data() {
-
-        const uuid = await this.assignUuid();
-
         let itemData = await Item.findOne({
-            uuid,
+            name: this.name,
+            guildId: this.guildId,
+        });
+        let uuidData = await Item.findOne({
+            uuid: this.uuid
         });
 
         if (!itemData) {
-            this.uuid = uuid;
-            itemData = new Item(this);
+            if (!uuidData) {
+                itemData = new Item(this);
+                itemData.uuid = this.uuid;
+            } else {
+                itemData = new Item(this);
+                itemData.uuid = uuidData.id;
+            }
+
+            await itemData.save();
         }
 
-        itemData.name = this.name;
-        itemData.uuid = this.uuid;
-        itemData.value = this.value;
-        itemData.image = this.image;
-        itemData.guildId = this.guildId;
-
-        await itemData.save();
-
         return itemData;
+    }
+
+    async exists() {
+        let itemData = await Item.findOne({
+            name: this.name,
+            guildId: this.guildId,
+            image: this.image,
+        });
+
+        if (!itemData) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     async reveal(user: UserClass): Promise<EmbedBuilder[]> {
@@ -135,12 +185,12 @@ export class ItemClass {
             .setColor(color as ColorResolvable)
             .setThumbnail(this.image)
             .setAuthor({ name: this.user.name, iconURL: this.user.avatar })
-            .setDescription(`You found **${this.name}**!`)
+            .setDescription(`${this.emoji()} You found **${this.name}**!`)
             .addFields(
                 { name: "VALUE", value: `${this.value.toString()}`, inline: true },
-                { name: "TIER", value: `${this.assignTier()}`, inline: true }
-        );
-        
+                { name: "TIER", value: `${this.assignTier()}`, inline: true },
+            );
+
         return embed;
     }
 }

@@ -3,29 +3,30 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const uuidSchema = new Schema({
     id: String,
+    name: String,
 });
 
 export class UuidClass {
     id: string;
+    name: string;
 
-    async generate() {
+    async generate(name: string) {
         let id = uuidv4();
 
-        this.id = id;
-
-        let idData = await Uuid.findOne({
-            id: this.id
+        let uuidData = await Uuid.findOne({
+            name: name,
         });
 
-
-        if (!idData) {
-            idData = new Uuid(this);
+        if (!uuidData) {
+            this.id = id;
+            this.name = name;
+            uuidData = new Uuid(this);
+            uuidData.save();
         } else {
-            this.id = idData.id;
+            this.id = uuidData.id;
         }
-        await idData.save();
 
-        return id;
+        return this.id;
     }
 }
 

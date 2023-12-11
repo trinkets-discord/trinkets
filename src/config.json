@@ -1,8 +1,19 @@
 {
     "constants": {
-        "level_rate": 1.25,
-        "default_exp": 100,
-        "value_bias": 5.3
+        "level_rate": 1.5,
+        "default_exp": 1000,
+        "value_bias": 7.5
+    },
+    "emojis": {
+        "icon": "<:trinkets:1182021229633359993>",
+        "icon_grey": "<:trinketGrey:1182021640155058307>",
+        "tiers": {
+            "common": "<:common:1183848939343073311>",
+            "uncommon": "<:uncommon:1183848936046346240>",
+            "rare": "<:rare:1183848934813204490>",
+            "epic": "<:epic:1183848937354961048>",
+            "legendary": "<:legendary:1183848937770197094>"
+        }
     },
     "colors": {
         "default": "#324ca8",
@@ -38,7 +49,7 @@
         },
         "legendary": {
             "min": 5001,
-            "max": 50000
+            "max": 10000
         }
     }
 }

@@ -54,13 +54,11 @@ MONGO_URI=
 
 ```json
 {
-    //...
     "values": {
         "common": {
             "min": 10,
             "max": 25
         },
-        //...
     }
 }
 ```
@@ -72,10 +70,8 @@ MONGO_URI=
 ```json
 {
     "colors": {
-        //...
         "tiers": {
             "common": "#adadad",
-            //...
         }
     }
 }
@@ -88,17 +84,16 @@ MONGO_URI=
 ```json
 {
     "constants": {
-        "level_rate": 1.25,
+        "level_rate": 1.5,
         "default_exp": 100,
-        "value_bias": 5.3
+        "value_bias": 10
     },
-    // ...
 }
 ```
 
 > - **level_rate**: the rate in which the amount of experience required for the next level is multiplied
 > - **default_exp**: the default amount of experience required to level up at the base level (1)
->   - ex. if the `default_amount` = **100** and `rate` = **1.5**, then the *next* level (2) will require `100 * 1.25` (125) experience for the next level, etc...
+>   - ex. if the `default_amount` = **100** and `level_rate` = **1.5**, then the *next* level (2) will require `100 * 1.5` (150) experience for the next level, etc...
 > - **value_bias**: higher values will result in lower chances of the value of trinkets being close to the maximum value
 
 ---

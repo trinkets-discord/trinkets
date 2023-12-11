@@ -59,15 +59,10 @@ const add: SlashCommand = {
         // item
         const item = new ItemClass(userClass);
 
-        await item.build(name, image, interaction.guildId);
-
-        let embed = new EmbedBuilder();
+        let embed = await item.build(name, image, interaction.guildId);
 
         embed
-            .setColor(colors.success as ColorResolvable)
             .setAuthor({ name: interaction.user.displayName, iconURL: interaction.user.avatarURL() })
-            .setDescription(`**${name}** added!`)
-            .setThumbnail(image)
             .setFooter({ iconURL: client.user.avatarURL(), text: '/find' });
 
         if (interaction.replied) return;
