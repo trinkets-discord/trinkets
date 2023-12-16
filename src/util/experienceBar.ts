@@ -1,13 +1,13 @@
-import User, { UserClass } from "../models/user";
+import Player, { PlayerClass } from "../models/player";
 import { emojis } from '../config.json';
 
-export const experienceBar = async (user: UserClass) => {
-    let userData = await User.findOne({
+export const experienceBar = async (user: PlayerClass) => {
+    let userData = await Player.findOne({
         id: user.id,
     });
 
     if (!userData) {
-        userData = new User(user);
+        userData = new Player(user);
         await userData.save();
     }
     const barLength = 10;
