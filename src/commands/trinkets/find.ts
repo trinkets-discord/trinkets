@@ -1,6 +1,6 @@
 import { PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { generate } from "../../lib/generate";
-import User, { UserClass } from "../../models/user";
+import Player, { PlayerClass } from "../../models/player";
 import { SlashCommand } from "../../util/types";
 
 
@@ -15,10 +15,10 @@ const find: SlashCommand = {
     run: async (client, interaction) => {
         await interaction.deferReply().catch(() => null)
 
-        let userData = await User.findOne({
+        let userData = await Player.findOne({
             name: interaction.user.username
         });
-        let userClass: UserClass = new UserClass();
+        let userClass: PlayerClass = new PlayerClass();
 
         if (!userData) {
             userClass.name = interaction.user.username;
@@ -27,7 +27,7 @@ const find: SlashCommand = {
             userClass.guildId = interaction.guildId;
             userClass.level = 1;
             userClass.experience = 0;
-            userData = new User(userClass);
+            userData = new Player(userClass);
             await userData.save();
         } else {
             userClass.name = userData.name!;

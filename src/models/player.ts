@@ -5,7 +5,7 @@ import { experienceBar } from "../util/experienceBar";
 import { ItemClass } from "./item";
 
 
-export const userSchema = new Schema({
+export const playerSchema = new Schema({
     name: String,
     id: String,
     level: Number,
@@ -15,7 +15,7 @@ export const userSchema = new Schema({
     guildId: String,
 });
 
-export class UserClass {
+export class PlayerClass {
     name: string;
     id: string;
     level: number;
@@ -83,11 +83,11 @@ export class UserClass {
     }
 
     async data() {
-        let userData = await User.findOne({
+        let userData = await Player.findOne({
             id: this.id,
         });
         if (!userData) {
-            userData = new User(this);
+            userData = new Player(this);
         }
         userData.experience = this.experience;
         userData.inventory = this.inventory;
@@ -118,8 +118,8 @@ export class UserClass {
     }
 }
 
-userSchema.loadClass(UserClass);
+playerSchema.loadClass(PlayerClass);
 
-const User = mongoose.model('User', userSchema);
+const Player = mongoose.model('Player', playerSchema);
 
-export default User;
+export default Player;

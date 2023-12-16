@@ -2,7 +2,7 @@ import { ColorResolvable, EmbedBuilder } from "discord.js";
 import mongoose, { Schema } from "mongoose";
 import { colors, constants, values, emojis } from '../config.json';
 import { Tier } from "../util/types";
-import { UserClass } from "./user";
+import { PlayerClass } from "./player";
 import { v4 as uuidv4 } from 'uuid';
 import "colors";
 
@@ -31,10 +31,10 @@ export class ItemClass {
     uuid: string;
     value: number;
     guildId: string;
-    user?: UserClass;
+    user?: PlayerClass;
     tier: Tier;
 
-    constructor(user: UserClass) {
+    constructor(user: PlayerClass) {
         this.user = user;
     }
 
@@ -172,7 +172,7 @@ export class ItemClass {
         }
     }
 
-    async reveal(user: UserClass): Promise<EmbedBuilder[]> {
+    async reveal(user: PlayerClass): Promise<EmbedBuilder[]> {
         return await user.find(this);
     }
 

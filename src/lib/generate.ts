@@ -1,8 +1,8 @@
 import { Document } from "mongoose";
 import Item, { ItemClass, ItemType } from "../models/item";
-import { UserClass } from "../models/user";
+import { PlayerClass } from "../models/player";
 
-export const generate = async (user: UserClass) => {
+export const generate = async (user: PlayerClass) => {
     const array: Array<Document<ItemType>> = await Item.find();;
     const length = await Item.countDocuments();
 

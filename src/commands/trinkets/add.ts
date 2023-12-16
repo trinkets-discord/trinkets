@@ -1,7 +1,7 @@
 import { ColorResolvable, EmbedBuilder, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { colors } from '../../config.json';
 import { ItemClass } from "../../models/item";
-import User, { UserClass } from "../../models/user";
+import Player, { PlayerClass } from "../../models/player";
 import { SlashCommand } from "../../util/types";
 
 const add: SlashCommand = {
@@ -34,10 +34,10 @@ const add: SlashCommand = {
         const image = options.get("image").value as string;
 
         // user
-        let userData = await User.findOne({
+        let userData = await Player.findOne({
             id: interaction.user.id
         });
-        let userClass: UserClass = new UserClass();
+        let userClass: PlayerClass = new PlayerClass();
         if (!userData) {
             userClass.name = interaction.user.username;
             userClass.id = interaction.user.id;
@@ -45,7 +45,7 @@ const add: SlashCommand = {
             userClass.guildId = interaction.guildId;
             userClass.level = 1;
             userClass.experience = 0;
-            userData = new User(userClass);
+            userData = new Player(userClass);
             await userData.save();
         } else {
             userClass.name = userData.name!;
